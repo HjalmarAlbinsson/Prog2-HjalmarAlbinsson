@@ -1,0 +1,4 @@
+for heltal a mellan 1 - 1000
+    for heltal b mellan a - 1000
+        if sqrt(a^2 + b^2) + a + b = 1000 och sqrt(a^2 + b^2) > b
+            skriv ut 1000ab - a^2b - b^2a
