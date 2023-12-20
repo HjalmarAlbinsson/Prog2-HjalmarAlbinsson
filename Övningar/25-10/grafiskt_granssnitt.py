@@ -1,4 +1,4 @@
-from my_files import sweet_home_albama
+import sweet_home_alabama
 from tkinter import *
 
 root = Tk()
@@ -6,9 +6,10 @@ root = Tk()
 e = Entry(root)
 e.pack()
 
-b = Button(root, text ="Tryck mig!")
+b = Button(root, text ="Make a new Baby!")
 
 def click_handler(self):
+    b.config(text="Parent")
     lbl["text"] = "Du skrev: " + e.get()
 
 b.bind("<Button-1>", click_handler)

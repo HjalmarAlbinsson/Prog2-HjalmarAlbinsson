@@ -1,0 +1,1 @@
+minsta_klippnings_antal

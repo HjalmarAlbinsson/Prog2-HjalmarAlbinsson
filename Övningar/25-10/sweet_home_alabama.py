@@ -3,6 +3,7 @@ import numpy as np
 import math
 import datetime
 import time
+from tkinter import *
 
 max_dna_mutations = 10
 
@@ -192,13 +193,74 @@ def get_time_left(event):
 Man("ADAM", 18, random_dna_strains(100)[0])
 Woman("EVE", 21, random_dna_strains(200)[0])
 
-while running:
-    request = input("[Make child: (M), Shop: (S), Genetics: (G)] ENTER: ").upper()
+root = Tk()
+lbl = Label(root)
+lbl["text"] = "Make child: (M), Shop: (S), Genetics: (G)"
+lbl.pack()
+e_1 = Entry(root)
+e_1.pack()
+
+b_1 = Button(root, text ="Enter")
+
+def button_handler(self):
+    if e_1.get().upper() in ("M", "S", "G"):
+        hide(e_1)
+        hide(b_1)
+        hide(lbl)
+        game_loop(e_1.get().upper())
+
+b_1.bind("<Button-1>", button_handler)
+b_1.pack()
+
+def make_listbox(lb, e, lst):
+    def update(data):
+        lb.delete(0, 'end')
+        for item in data:
+            lb.insert('end', item)
+
+    def checkkey(event):
+        value = event.widget.get()
+        if value == '':
+            data = lst
+        else:
+            data = [item for item in people if value.lower() in item.lower()]                         
+        update(data)
+
+    #e = Entry(root)
+    e.bind('<KeyRelease>', checkkey)
+
+    def onselect(evt):
+        hide(lb)
+        hide(e)
+        w = evt.widget
+        #index = int(w.curselection()[0])
+        #value = w.get(index)
+
+    #lb = Listbox(root)
+    lb.bind('<<ListboxSelect>>', onselect)
+    update(lst)
+
+lb_1 = Listbox(root)
+e_2 = Entry(root)
+make_listbox(lb_1, e_2, people)
+
+def hide(widget):
+    widget.pack_forget()
+
+def show(widget):
+    widget.pack()
+
+def game_loop(request):
     match request:
         case "M":
-            p1 = input("[(First Parent)] ENTER: ").upper()
-            p2 = input("[(Secound Parent)] ENTER: ").upper()
-            name = input("[(Name)] ENTER: ").upper()
+            lbl["text"] = "[First Parent]"
+            show(lbl)
+            show(e_2)
+            show(lb_1)
+
+
+            lbl["text"] = "[Secound Parent]"
+            lbl["text"] = "[Baby name]"
             makeChild(people[p1], people[p2], name, 0)
         case "S":
             print("Shop")
@@ -212,3 +274,6 @@ while running:
                 p = people[input("[(Person)] ENTER: ").upper()]
                 for gene in p.genes_dict:
                     print(f"{gene}: {p.genes_dict[gene]}")
+
+root.geometry("500x500")
+root.mainloop()
