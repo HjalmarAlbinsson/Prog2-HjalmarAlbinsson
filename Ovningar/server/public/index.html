@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heartstone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="body">
+    <div class="board">
+        <div class="side" id="opponent-side">
+        </div>
+        <div class="side" id="player-side">
+            <div class="card-slot"></div>
+            <div class="card-slot"></div>
+            <div class="card-slot"></div>
+            <div class="card-slot"></div>
+            <div class="card-slot"></div>
+            <div class="card-slot"></div>
+            <div class="card-slot"></div>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+    <video id="video" src="click.mp4" style="display: none;"></video>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
