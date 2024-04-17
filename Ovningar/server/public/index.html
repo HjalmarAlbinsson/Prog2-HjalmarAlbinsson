@@ -8,19 +8,21 @@
 </head>
 <body id="body">
     <div class="board">
+        <div class="" id="coins"><p class="text" id="coins-text">Coins: 0</p></div>
+        <div class="dropzone" id="sell"><p class="text" id="sell-text">Sell</p></div> 
         <div class="side" id="opponent-side">
+            <div class="set" id="opponent-set"></div>
         </div>
         <div class="side" id="player-side">
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
+            <div class="set" id="player-set">
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+            </div>
         </div>
     </div>
-    <canvas id="canvas"></canvas>
     <video id="video" src="click.mp4" style="display: none;"></video>
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>

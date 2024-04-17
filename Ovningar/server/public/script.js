@@ -1,55 +1,70 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {  
+  let coins = 0
 
-  class CardAbilitiesHandler {
-    static handleDeathrattleGolem () {
-        console.log("Summon a number of 1/1 Rat tokens equal to the number of friendly Beasts.");
-        // Implement Golem's Battlecry logic here
-    }
+  function coins2(number) {
+    let cards = document.getElementsByClassName("card")
+    for (let card = 0; card < cards.length; card++) {
+        if (card.dataset.objectRef.inTavern === true) {
+            console.log("w")
+        }
+  }}
 
-    // Define methods for other Battlecry abilities
-  }
-  
   class Card {
-    constructor(color, inTavern = true, isGolden = false, clash = 1) {
+    constructor(color, hp, dmg, inTavern = true, isGolden = false, cost = 3) {
         this.color = color;
-        this.isGolden = false;
+        this.hp = hp;
+        this.dmg = dmg;
+        this.isGolden = isGolden;
         this.inTavern = inTavern;
-        this.clash = clash;
+        this.cost = cost;
     }
     
-    summoncard(slotindex) {
-      const cardslotlist = document.getElementsByClassName("card-slot")
-      let specificCard = document.createElement('divCardList');
-      specificCard.classList.add("card");
-      specificCard.style.backgroundColor = this.color;
-      specificCard.draggable = true;
-      cardslotlist[slotindex].appendChild(specificCard);
+    summoncard(slotindex, side) {
+        let cardslotlist = side === 2 ? document.getElementById("opponent-set").children :
+                                        document.getElementById("player-set").children;
+        let summonedCard = document.createElement('divCardList');
+        summonedCard.classList.add("card");
+        summonedCard.dataset.objectRef = this
+        summonedCard.style.backgroundColor = this.color;
+        cardslotlist[slotindex].appendChild(summonedCard);
     }
 
     RedOnBlue() {}
+    RedOnYellow() {}
+    RedOnGreen() {}
+    RedOnBlack() {}
+    RedOnWhite() {}
 }
-
-// Example usage:
-let blue = new Card("blue");
-blue.summoncard(0);
-let red = new Card("red");
-red.summoncard(1);
 
   //Makes it possible to drop cards
   document.addEventListener('dragover', e => {
       e.preventDefault();
+      document.getElementById("coins-text").innerHTML = `Coins: ${coins}`
   });
 
   document.addEventListener('drop', e => {
       const draggedCard = document.querySelector('.card.dragging');
-      if (draggedCard && e.target.classList.contains('card-slot') && e.target.children.length === 0) {
-          e.target.appendChild(draggedCard);
+      if (draggedCard && e.target.classList.contains('card-slot') && e.target.children.length === 0 && e.target.classList.contains('shop-slot') === false) {
+        draggedCard.parentNode.removeChild(draggedCard);
+        e.target.appendChild(draggedCard);
+      }
+      else if (draggedCard && (e.target.id === "sell")) {
+            draggedCard.parentNode.removeChild(draggedCard);
+            coins += 1
+            document.getElementById("coins-text").innerHTML = `Coins: ${coins}`
+      }
+      if (e.target.classList.contains("dropzone")) {
+        e.target.classList.remove("dragover");
       }
   });
 
   document.addEventListener('dragstart', e => {
       if (e.target.classList.contains('card')) {
           e.target.classList.add('dragging');
+          const offsetX = e.clientX - e.target.getBoundingClientRect().left;
+          const offsetY = e.clientY - e.target.getBoundingClientRect().top;
+          // Set the position of the card relative to the cursor
+          e.dataTransfer.setDragImage(e.target, offsetX, offsetY);
       }
   });
 
@@ -58,41 +73,44 @@ red.summoncard(1);
           e.target.classList.remove('dragging');
       }
   });
+  document.addEventListener("dragenter", (e) => {
+    if (e.target.classList.contains("dropzone")) {
+      e.target.classList.add("dragover");
+    }
+  });
+  
+  document.addEventListener("dragleave", (e) => {
+    if (e.target.classList.contains("dropzone")) {
+      e.target.classList.remove("dragover");
+    }
+  });
 
 const socket = io();
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let players = {};
-
-socket.on('loadExistingPlayers', (data) => {
-  players = Object.assign(players, data);
-});
-
-socket.on('newPlayer', (id) => {
-  players[id] = { x: 0, y: 0, color: 'black' };
-}); 
-
-socket.on('playerDisconnected', (id) => {
-    delete players[id];
-});
-
-socket.on('playerTeleport', (data) => {
-    players[data.id].x= data.position.x;
-    players[data.id].y = data.position.y;
-});
+socket.emit('joinRoom')
 
 socket.on("loadShop", (data) => {
   for (let i=0; i<=data.tier; i++) {
-    var opponentSide = document.getElementById('opponent-side');
+    var opponentSet = document.getElementById('opponent-set');
     var newCardSlot = document.createElement('div');
     newCardSlot.classList.add('card-slot');
-    opponentSide.appendChild(newCardSlot);
-}});
+    newCardSlot.classList.add('shop-slot');
+    opponentSet.appendChild(newCardSlot);
+  }
+    let Yellow = new Card("yellow") 
+    console.log("e")
+    Yellow.summoncard(0, 2)
+    Yellow.summoncard(1, 2)
+    Yellow.summoncard(2, 2)
+    Yellow.summoncard(3, 2)
+    Yellow.summoncard(4, 2)
+    Yellow.summoncard(5, 2)
+});
+
+let blue = new Card("blue");
+blue.summoncard(0, 1);
+let red = new Card("red");
+red.summoncard(1, 1);
  
 class InputHandler {
   static handleKeyPress(key) {
@@ -123,25 +141,4 @@ class InputHandler {
 document.addEventListener('keydown', (event) => {
     InputHandler.handleKeyPress(event.key);
 });
-canvas.addEventListener('click', (event) => {
-    InputHandler.handleMouseClick(event);
-});
-
-
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    Object.entries(players).forEach(([id, player]) => {
-        ctx.fillStyle = id === socket.id ? player.color : player.color;
-        ctx.beginPath();
-        ctx.arc(player.x, player.y, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
-    });
-
-    requestAnimationFrame(draw);
-}
-
-draw();
 });

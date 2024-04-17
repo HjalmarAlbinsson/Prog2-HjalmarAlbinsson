@@ -1,61 +1,111 @@
 .board {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
     height: 100vh;
-    padding: 20px;
-    z-index: 2; /* Increase z-index to be above canvas */
-    pointer-events: none; /* Make sure clicks pass through to canvas */
+    width: 100vw;
+    z-index: 2;
+    pointer-events: none;
+    flex-direction: column;
+    background-color: rgb(43, 43, 43);
 }
 
-.side {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    position: absolute;
-    pointer-events: auto; /* Re-enable pointer events for slots and cards */
+.body html{
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
 }
 
-#opponent-side {
-    top: 0;
-}
-
-#player-side {
-    bottom: 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .card-slot {
     width: 80px;
     height: 120px;
-    border: 2px dashed #ccc;
     border-radius: 5px;
+    box-shadow: inset 0 0 10px rgb(84, 84, 84);
     margin-right: 10px;
     cursor: pointer;
     display: flex;
     justify-content: center;
+    bottom: 0;
     align-items: center;
     position: relative;
-    z-index: 3; /* Ensure slots are above canvas */
+    pointer-events: auto;
+    z-index: 3;
 }
 
 .card {
     width: 80px;
     height: 120px;
-    background-color: #aaa;
+    background-color: #aaa; 
     border-radius: 5px;
     border: 1px solid #555;
     cursor: pointer;
     position: relative;
-    z-index: 3; /* Ensure cards are above canvas */
+    z-index: 3;
+}
+.set {
+    display: flex;
 }
 
-#canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    z-index: 1; /* Lower z-index to be below slots and cards */
+#player-set {
+    margin-top: auto;
+}
+
+.side {
+    display: flex;
+    justify-content: center;
+    height: 50vh;
+    width: 100vw;
+}
+
+#sell {
+    top: 10%;
+    right: -10%;
+    transform: translate(-50%, -50%);
+    height: 20vh;
+    width: 20vw;
+    border-style: dashed;
+    position: absolute;
+    border-color: rgb(255, 255, 255, 0.5);
+    background-color: rgba(255, 200, 0, 0.5);
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255, 0.5);
+}
+
+#sell-text {
+    font-size: 7.5vw;
+    z-index: -2;
+    pointer-events: none;
+}
+
+#sell.dragover {
+    background-color: rgba(255, 200, 0, 0.75);
+    border-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255)
+    
+}
+
+#coins {
+    top: 50%;
+    right: -10%;
+    transform: translate(-50%, -50%);
+    height: 100vh;
+    width: 20vw;
+    position: absolute;
+    background-color: rgba(94, 94, 94, 0.5);
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items:flex-end;
+    color: rgb(255, 200, 0);
+}
+
+#coins-text {
+    font-size: 2.5vw;
+    z-index: -2;
 }
